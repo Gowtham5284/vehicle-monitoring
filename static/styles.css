@@ -1,0 +1,36 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f5f7fb;
+  color: #333;
+  margin: 0;
+  padding: 20px;
+}
+.container {
+  max-width: 760px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px 24px;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+}
+h1 { margin-top: 0; }
+label { display:block; margin-top: 12px; }
+input[type="text"], input[type="file"], input[type="tel"] {
+  width:100%; padding: 8px; margin-top:6px; border:1px solid #ddd; border-radius:4px;
+}
+button {
+  margin-top: 14px;
+  padding: 10px 16px;
+  background:#0066cc; color:#fff; border:none; border-radius:6px; cursor:pointer;
+}
+button:hover { background:#005bb5; }
+.flash { padding:8px 10px; border-radius:4px; margin-bottom:10px; }
+.flash.success { background:#e6f9ec; color:#137845; border:1px solid #b7f0c9; }
+.flash.error { background:#fdecea; color:#9b2d2d; border:1px solid #f3b6b6; }
+.flash.info { background:#eef6ff; color:#1e3a8a; border:1px solid #cfe4ff; }
+.flash.warning { background:#fff4e5; color:#7a4900; border:1px solid #ffddb2; }
+.camera { margin-top: 16px; }
+video { width:100%; max-height:420px; background:#000; border-radius:6px; }
+.note { font-size: 0.9em; color:#666; margin-top:8px; }
+.targets { margin-top: 8px; font-size: 0.95em; color:#444; }
+.result { margin-top: 12px; background:#fbfdff; padding: 12px; border-radius:6px; border:1px solid #eef5ff; }
