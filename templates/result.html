@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Detection Result</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>Detection Result</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flashes">
+          {% for category, msg in messages %}
+            <div class="flash {{ category }}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="result">
+      <p><strong>Detected Plates:</strong>
+      {% if detected %}
+        <ul>
+        {% for p in detected %}
+          <li>{{ p }}</li>
+        {% endfor %}
+        </ul>
+      {% else %}
+        None
+      {% endif %}
+      </p>
+
+      <p><strong>Matches:</strong>
+        {% if matches %}
+          {{ matches|join(', ') }}
+        {% else %}
+          None
+        {% endif %}
+      </p>
+
+      <p><strong>Location:</strong> {{ place_name }} (lat: {{ latitude }}, lon: {{ longitude }})</p>
+
+      {% if sms_sid %}
+        <p>Notification sent (Twilio SID: {{ sms_sid }})</p>
+      {% endif %}
+    </div>
+
+    <p><a href="{{ url_for('detect_license_plate') }}">← Back to detection</a></p>
+    <p><a href="{{ url_for('login') }}">← Back to configuration</a></p>
+  </div>
+</body>
+</html>
