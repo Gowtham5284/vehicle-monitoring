@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Vehicle Monitor - Detect</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>Detect License Plate</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flashes">
+          {% for category, msg in messages %}
+            <div class="flash {{ category }}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="targets">
+      <strong>Targets:</strong> {% if targets %}{{ targets|join(', ') }}{% else %}No targets set{% endif %}
+      {% if recipient %}<br><strong>Recipient:</strong> {{ recipient }}{% endif %}
+    </div>
+
+    <div class="camera">
+      <video id="video" autoplay playsinline></video>
+      <canvas id="canvas" style="display:none;"></canvas>
+      <div class="controls">
+        <button id="captureBtn">Capture & Upload</button>
+      </div>
+      <p class="note">If camera isn't available, use the file upload below.</p>
+    </div>
+
+    <form id="uploadForm" method="post" action="{{ url_for('upload_image') }}" enctype="multipart/form-data">
+      <label for="image_file">Or upload an image:</label>
+      <input type="file" id="image_file" name="image_file" accept="image/*">
+      <button type="submit">Upload Image</button>
+    </form>
+
+    <p><a href="{{ url_for('login') }}">← Back to configuration</a></p>
+  </div>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureBtn = document.getElementById('captureBtn');
+
+    // Try to start webcam
+    async function startCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        video.srcObject = stream;
+      } catch (err) {
+        console.warn('Could not access camera:', err);
+        // camera might be blocked; user can still upload file
+      }
+    }
+
+    captureBtn.addEventListener('click', async () => {
+      if (!video.srcObject) {
+        alert('Camera not available. Please upload an image file instead.');
+        return;
+      }
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+
+      // send to server
+      try {
+        const form = new FormData();
+        form.append('image_data', dataUrl);
+        const resp = await fetch('{{ url_for("upload_image") }}', {
+          method: 'POST',
+          body: form,
+        });
+        // server responds with HTML - replace current document
+        const html = await resp.text();
+        document.open();
+        document.write(html);
+        document.close();
+      } catch (err) {
+        alert('Upload failed: ' + err);
+      }
+    });
+
+    startCamera();
+  </script>
+</body>
+</html>
