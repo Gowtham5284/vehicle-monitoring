@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Vehicle Monitor - Set Targets</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>Vehicle Monitor - Configure Targets</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flashes">
+          {% for category, msg in messages %}
+            <div class="flash {{ category }}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form method="post" action="{{ url_for('set_target') }}">
+      <label for="name">Recipient Name</label>
+      <input id="name" name="name" placeholder="Name" required>
+
+      <label for="phone_number">Recipient Phone Number</label>
+      <input id="phone_number" name="phone_number" placeholder="+1234567890" required>
+
+      <label for="plate_number">Target Plate Number(s)</label>
+      <input id="plate_number" name="plate_number" placeholder="ABC123, XYZ789 (comma separated)" required>
+
+      <button type="submit">Save & Go to Detection</button>
+    </form>
+
+    <p class="note">Note: Twilio credentials and Tesseract path should be set via environment variables on the server.</p>
+  </div>
+</body>
+</html>
